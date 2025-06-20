@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+// The 'process.env.REACT_APP_API_URL' will be injected by Vercel during the build.
+// If it doesn't exist (like in local development), it will default to an empty string,
+// making requests relative to the current host (e.g., /api/books).
+const baseURL = process.env.REACT_APP_API_URL || '';
+
 const api = axios.create({
-  baseURL: '/api', // Your backend API base URL
+  baseURL: baseURL, // Use the dynamic base URL
 });
 
 // Use an interceptor to add the token to every request
