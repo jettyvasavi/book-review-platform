@@ -1,9 +1,14 @@
 import axios from 'axios';
 
+// Vite exposes env variables on import.meta.env
+// The || '/api' is a fallback for the Vercel production environment
+const baseURL = import.meta.env.VITE_API_URL || '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: baseURL,
 });
 
+// The rest of your interceptor code stays the same
 api.interceptors.request.use(
   (config) => {
     const userString = localStorage.getItem('user');

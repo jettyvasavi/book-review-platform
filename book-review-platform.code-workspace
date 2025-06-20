@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"name": "book-review-platform",
+			"path": "."
+		},
+		{
+			"name": "new-client",
+			"path": "../new-client"
+		}
+	],
+	"settings": {}
+}
