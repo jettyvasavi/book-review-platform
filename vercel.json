@@ -19,18 +19,6 @@
       "destination": "/server/server.js"
     },
     {
-      "source": "/static/(.*)",
-      "destination": "client/build/static/$1"
-    },
-    {
-      "source": "/manifest.json",
-      "destination": "client/build/manifest.json"
-    },
-    {
-      "source": "/favicon.ico",
-      "destination": "client/build/favicon.ico"
-    },
-    {
       "source": "/(.*)",
       "destination": "client/build/index.html"
     }
