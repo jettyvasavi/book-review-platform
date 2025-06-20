@@ -12,34 +12,12 @@ import authRoutes from './routes/authRoutes.js';
 dotenv.config();
 
 const app = express();
-
-// --- CORS CONFIGURATION FOR VERCEL ---
-// When you deploy, Vercel will create a production URL for you.
-// You should add it to the cors options to be secure.
-const allowedOrigins = [
-  'http://localhost:3000', // For local development
-  // 'https://your-project-name.vercel.app' // <-- ADD YOUR VERCEL URL HERE LATER
-];
-
-app.use(cors({
-  origin: function (origin, callback) {
-    // allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    }
-    return callback(null, true);
-  }
-}));
-// --- END CORS CONFIGURATION ---
-
-
+app.use(cors());
 app.use(express.json());
 
-// A simple root route for the API to check if it's running
+// Simple API check route
 app.get('/api', (req, res) => {
-  res.send('API is running...');
+  res.json({ message: 'Welcome to the Book Review API. The server is responding.' });
 });
 
 // API Routes
@@ -48,24 +26,38 @@ app.use('/api/books', bookRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/users', userRoutes);
 
-// Custom Error Middleware
+// Error Middleware
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => {
-    // Only listen if NOT on Vercel. Vercel handles the server listening part.
-    if (process.env.NODE_ENV !== 'production') {
-      app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-    }
-  })
-  .catch((err) => {
-    console.error('❌ MongoDB connection failed:', err.message);
+// --- A more robust connection setup ---
+async function connectDB() {
+  if (!MONGO_URI) {
+    console.error('FATAL ERROR: MONGO_URI environment variable is not defined.');
     process.exit(1);
-  });
+  }
+  try {
+    // Modern Mongoose connection options
+    await mongoose.connect(MONGO_URI);
+    console.log('✅ MongoDB Connected Successfully.');
+  } catch (err) {
+    console.error('❌ MongoDB Connection Error:', err.message);
+    // This will cause the Vercel function to fail with a clear error in the logs
+    process.exit(1);
+  }
+}
 
-// Export the app for Vercel's serverless environment
+connectDB().then(() => {
+  // Only start listening if not on Vercel
+  if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on http://localhost:${PORT}`);
+    });
+  }
+});
+// ------------------------------------
+
 export default app;
-
