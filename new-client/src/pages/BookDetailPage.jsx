@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useCallback, useContext } from 'react'; 
+import React, { useState, useEffect, useCallback, useContext } from 'react'; // 
 import { useParams } from 'react-router-dom';
 import { getBookById } from '../api/bookApi.js';
 import { getReviewsByBookId } from '../api/reviewApi.js';
-import { BookContext } from '../context/BookContext.jsx'; 
+import { BookContext } from '../context/BookContext.jsx'; //
 import Loader from '../components/Loader.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import ReviewList from '../components/ReviewList.jsx';
@@ -46,6 +46,7 @@ const BookDetailPage = () => {
     await fetchBookAndReviews();
     await fetchBooks();
   };
+ 
 
 
   if (loading) return <Loader />;
@@ -66,7 +67,7 @@ const BookDetailPage = () => {
           <div className="book-detail-rating">
             <StarRating rating={book.rating} />
             <span style={{ marginLeft: '10px', color: '#777' }}>
-              ({book.numReviews || 0})
+              ({book.numReviews || 0} reviews)
             </span>
           </div>
           <p><strong>Description:</strong> {book.description}</p>
@@ -75,6 +76,7 @@ const BookDetailPage = () => {
       <hr />
       <div className="book-detail-reviews-section">
         <ReviewList reviews={reviews} />
+        {/* 5. Pass the new handler down to the ReviewForm */}
         <ReviewForm bookId={id} onReviewSubmitted={handleReviewSubmitted} />
       </div>
     </div>
