@@ -16,7 +16,7 @@ const app = express();
 
 const corsOptions = {
     // We will get this URL after deploying the frontend
-    origin: ['http://localhost:5173', 'https://your-frontend-url.onrender.com'], 
+    origin: ['http://localhost:5173', 'hhttps://book-review-platform-1-1wz2.onrender.com'], 
     optionsSuccessStatus: 200 
 };
 app.use(cors(corsOptions));
