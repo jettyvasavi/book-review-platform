@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useParams } from 'react-router-dom';
 import { getBookById } from '../api/bookApi.js';
 import { getReviewsByBookId } from '../api/reviewApi.js';
-import { BookContext } from '../context/BookContext.js'; 
+import { BookContext } from '../context/BookContext.jsx'; 
 import Loader from '../components/Loader.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 import ReviewList from '../components/ReviewList.jsx';
