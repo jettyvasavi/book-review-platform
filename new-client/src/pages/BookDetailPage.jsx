@@ -66,7 +66,7 @@ const BookDetailPage = () => {
           <div className="book-detail-rating">
             <StarRating rating={book.rating} />
             <span style={{ marginLeft: '10px', color: '#777' }}>
-              ({book.numReviews || 0} reviews)
+              ({book.numReviews || 0})
             </span>
           </div>
           <p><strong>Description:</strong> {book.description}</p>
