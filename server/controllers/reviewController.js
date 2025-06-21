@@ -1,10 +1,7 @@
 import Review from '../models/Review.js';
 
-// Get all reviews for a specific book
 export const getReviewsByBook = async (req, res, next) => {
   try {
-    // This populates the 'user' field in each review with the 'name' from the User collection.
-    // Without .populate(), the 'user' field would just be an ID string.
     const reviews = await Review.find({ bookId: req.params.bookId })
       .populate('user', 'name'); 
 
@@ -14,7 +11,6 @@ export const getReviewsByBook = async (req, res, next) => {
   }
 };
 
-// ... addReview function remains the same ...
 export const addReview = async (req, res, next) => {
   const { bookId, comment, rating } = req.body;
   const userId = req.user.id; 
