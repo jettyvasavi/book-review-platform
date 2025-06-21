@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserContext } from '../context/UserContext.jsx'; 
+import { UserContext } from '../context/UserContext.js'; 
 import ErrorMessage from '../components/ErrorMessage.jsx'; 
 
 const LoginPage = () => {
