@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import api from '../api/axiosConfig.js'; 
+import api from '../api/axiosConfig.js';
 
 export const UserContext = createContext();
 
@@ -14,7 +14,6 @@ const getInitialUser = () => {
   }
 };
 
-
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(getInitialUser);
   const [loading, setLoading] = useState(false);
@@ -27,15 +26,12 @@ export const UserProvider = ({ children }) => {
     }
   }, [user]);
 
-
   const login = async (email, password) => {
     setLoading(true);
     try {
       const loginUrl = (import.meta.env.VITE_API_URL || '') + '/api/auth/login';
       const { data } = await axios.post(loginUrl, { email, password });
-      
-      setUser(data); 
-      
+      setUser(data);
       setLoading(false);
       return { success: true };
     } catch (error) {
@@ -45,15 +41,13 @@ export const UserProvider = ({ children }) => {
   };
 
   const logout = () => {
-   
-    setUser(null); 
+    setUser(null);
   };
 
   const updateUser = async (userData) => {
     setLoading(true);
     try {
       if (!user?._id) throw new Error("No user to update");
-      
       const { data } = await api.put(`/api/users/${user._id}`, userData);
       setUser({ ...user, name: data.name, email: data.email, bio: data.bio });
       setLoading(false);
@@ -70,6 +64,7 @@ export const UserProvider = ({ children }) => {
     login,
     logout,
     updateUser,
+    setUser,
   };
 
   return (
