@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react'; // 1. Import useContext
 import { useNavigate } from 'react-router-dom';
 import { addBook } from '../api/bookApi';
 import { toast } from 'react-toastify';
-import { BookContext } from '../context/BookContext'; // 2. Import the BookContext
+import { BookContext } from '../context/BookContext'; 
 
 const AddBookPage = () => {
   const [title, setTitle] = useState('');
@@ -12,7 +12,6 @@ const AddBookPage = () => {
   const [submitting, setSubmitting] = useState(false);
   const navigate = useNavigate();
   
-  // 3. Get the fetchBooks function from the context
   const { fetchBooks } = useContext(BookContext);
 
   const handleSubmit = async (e) => {
@@ -27,17 +26,13 @@ const AddBookPage = () => {
 
     try {
       const newBook = { title, author, description, coverImage };
-      // This adds the book to the database
+      
       await addBook(newBook);
 
-      // --- THIS IS THE FIX ---
-      // 4. After success, immediately re-fetch the global list of books
       await fetchBooks(); 
-      // --------------------
 
       toast.success('Book added successfully!');
       
-      // 5. Now navigate. The context is already updated.
       navigate('/books'); 
 
     } catch (err) {

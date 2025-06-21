@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios'; // Register page uses axios directly
-import { UserContext } from '../context/UserContext.js';
+import { UserContext } from '../context/UserContext.jsx';
 import ErrorMessage from '../components/ErrorMessage.jsx';
 
 const RegisterPage = () => {

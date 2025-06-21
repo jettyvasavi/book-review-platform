@@ -7,7 +7,7 @@ import ErrorMessage from '../components/ErrorMessage';
 const HomePage = () => {
   const { books, loading, error } = useContext(BookContext);
 
-  const featuredBooks = books.slice(0, 4); // Show 4 featured books
+  const featuredBooks = books.slice(0, 4); 
 
   return (
     <div className="page-container">

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
-// These imports should now work correctly
 import { getBookById } from '../api/bookApi';
 import { getReviewsByBookId } from '../api/reviewApi';
 import Loader from '../components/Loader';
@@ -19,7 +18,6 @@ const BookDetailPage = () => {
     try {
       setLoading(true);
       setError('');
-      // This Promise.all depends on both imports being valid functions
       const [bookRes, reviewsRes] = await Promise.all([
         getBookById(id),
         getReviewsByBookId(id),
@@ -27,7 +25,7 @@ const BookDetailPage = () => {
       setBook(bookRes.data);
       setReviews(reviewsRes.data);
     } catch (err) {
-      console.error("Failed on detail page:", err); // Log the real error to the console
+      console.error("Failed on detail page:", err); 
       setError('Failed to load book details and reviews');
     } finally {
       setLoading(false);
@@ -36,9 +34,8 @@ const BookDetailPage = () => {
 
   useEffect(() => {
     fetchBookAndReviews();
-  }, [fetchBookAndReviews]); // Correct dependency array
+  }, [fetchBookAndReviews]); 
 
-  // ... a lot of JSX here ...
   if (loading) return <Loader />;
   if (error) return <ErrorMessage message={error} />;
   if (!book) return <p>Book not found.</p>;
