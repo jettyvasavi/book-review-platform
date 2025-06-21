@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios'; // UserContext uses its own axios instance for auth
-import api from '../api/axiosConfig.js'; // Use the configured api for updateUser
+import axios from 'axios'; 
+import api from '../api/axiosConfig.jsx';
 
 export const UserContext = createContext();
 
@@ -22,8 +22,6 @@ export const UserProvider = ({ children }) => {
   const login = async (email, password) => {
     setLoading(true);
     try {
-      // --- THIS IS THE LINE TO UPDATE ---
-      // Use the full path for the login request
       const { data } = await axios.post('/api/auth/login', { email, password });
       setUser(data);
       setLoading(false);
@@ -41,7 +39,7 @@ export const UserProvider = ({ children }) => {
   const updateUser = async (userData) => {
     setLoading(true);
     try {
-      // updateUser uses the 'api' instance which has the auth token interceptor
+      
       const { data } = await api.put(`/api/users/${user._id}`, userData);
       setUser({ ...data, token: user.token });
       setLoading(false);
