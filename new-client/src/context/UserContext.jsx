@@ -1,10 +1,9 @@
 import React, { createContext, useState, useEffect } from 'react';
-import { updateUser as updateUserApi } from '../api/userApi';
-import axios from 'axios'; // We need axios here for login
+import axios from 'axios'; // UserContext uses its own axios instance for auth
+import api from '../api/axiosConfig.js'; // Use the configured api for updateUser
 
 export const UserContext = createContext();
 
-// Get user data from localStorage if it exists
 const storedUser = localStorage.getItem('user');
 const initialUser = storedUser ? JSON.parse(storedUser) : null;
 
@@ -12,24 +11,21 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(initialUser);
   const [loading, setLoading] = useState(false);
 
-  // This effect will run whenever the user state changes
   useEffect(() => {
     if (user) {
-      // Store user info and token in localStorage
       localStorage.setItem('user', JSON.stringify(user));
     } else {
-      // Remove user info from localStorage on logout
       localStorage.removeItem('user');
     }
   }, [user]);
 
-  // --- AUTHENTICATION FUNCTIONS ---
-
   const login = async (email, password) => {
     setLoading(true);
     try {
+      // --- THIS IS THE LINE TO UPDATE ---
+      // Use the full path for the login request
       const { data } = await axios.post('/api/auth/login', { email, password });
-      setUser(data); // The backend should return { _id, name, email, token }
+      setUser(data);
       setLoading(false);
       return { success: true };
     } catch (error) {
@@ -45,8 +41,8 @@ export const UserProvider = ({ children }) => {
   const updateUser = async (userData) => {
     setLoading(true);
     try {
-      const { data } = await updateUserApi(user._id, userData);
-      // Update user state with new data, but keep the original token
+      // updateUser uses the 'api' instance which has the auth token interceptor
+      const { data } = await api.put(`/api/users/${user._id}`, userData);
       setUser({ ...data, token: user.token });
       setLoading(false);
       return { success: true };
@@ -56,14 +52,7 @@ export const UserProvider = ({ children }) => {
     }
   };
 
-  // The value provided to consuming components
-  const contextValue = {
-    user,
-    loading,
-    login,
-    logout,
-    updateUser,
-  };
+  const contextValue = { user, loading, login, logout, updateUser };
 
   return (
     <UserContext.Provider value={contextValue}>

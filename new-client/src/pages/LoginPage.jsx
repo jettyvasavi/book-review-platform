@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserContext } from '../context/UserContext';
-import ErrorMessage from '../components/ErrorMessage';
+import { UserContext } from '../context/UserContext.jsx'; 
+import ErrorMessage from '../components/ErrorMessage.jsx'; 
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -13,9 +13,10 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    
     const result = await login(email, password);
     if (result.success) {
-      navigate('/'); // Redirect to home on successful login
+      navigate('/'); 
     } else {
       setError(result.message);
     }

@@ -1,7 +1,7 @@
 
-import api from './axiosConfig'; // RIGHT: Import the configured instance
+import api from './axiosConfig';
 
-const API_URL = '/users';
+// Use the full path for every call
+export const getUserById = (id) => api.get(`/api/users/${id}`);
 
-export const getUserById = (id) => api.get(`${API_URL}/${id}`);
-export const updateUser = (id, userData) => api.put(`${API_URL}/${id}`, userData);
+export const updateUser = (id, userData) => api.put(`/api/users/${id}`, userData);
