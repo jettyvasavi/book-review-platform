@@ -1,12 +1,11 @@
 import User from '../models/User.js';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 export const registerUser = async (req, res, next) => {
   const { name, email, password } = req.body;
 
   try {
-    // 1. Basic validation
     if (!name || !email || !password) {
       res.status(400);
       throw new Error('Please provide all required fields');
@@ -18,14 +17,13 @@ export const registerUser = async (req, res, next) => {
       throw new Error('User with this email already exists');
     }
 
-    // 2. Hash the password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await User.create({
       name,
       email,
-      password: hashedPassword, // Store the HASHED password
+      password: hashedPassword,
     });
 
     if (user) {
@@ -43,7 +41,6 @@ export const registerUser = async (req, res, next) => {
     next(error);
   }
 };
-
 
 export const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
