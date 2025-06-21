@@ -1,15 +1,12 @@
 import axios from 'axios';
-
 const getBaseURL = () => {
-  
   if (window.location.hostname.includes('onrender.com')) {
-  
-    return 'https://book-review-platform-tiw8.onrender.com';
+    return 'https://book-review-platform-tiw8.onrender.com'; 
   } else {
-    
     return 'http://localhost:5000';
   }
 };
+
 
 const api = axios.create({
   baseURL: getBaseURL(), 
