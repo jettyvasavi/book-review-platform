@@ -1,4 +1,4 @@
-import User from '../models/User.js';
+import User from '../models/User.js'; 
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
@@ -19,12 +19,18 @@ export const registerUser = async (req, res, next) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-
-    const user = await User.create({
+    
+    const userData = {
       name,
       email,
       password: hashedPassword,
-    });
+    };
+
+    console.log('ABOUT TO EXECUTE User.create() WITH DATA:', userData);
+   
+    const user = await User.create(userData);
+
+    console.log('User.create() has finished.');
 
     if (user) {
       res.status(201).json({
@@ -34,20 +40,18 @@ export const registerUser = async (req, res, next) => {
         token: jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' }),
       });
     } else {
-      res.status(400);
-      throw new Error('Invalid user data');
+      throw new Error('User creation returned null.');
     }
   } catch (error) {
+    console.error("ERROR in registerUser:", error);
     next(error);
   }
 };
 
 export const loginUser = async (req, res, next) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email });
-
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user._id,
