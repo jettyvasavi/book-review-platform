@@ -2,7 +2,6 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
-// Paths are now direct again, e.g., './middleware/...'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 
 import bookRoutes from './routes/bookRoutes.js';
@@ -15,7 +14,6 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-    // We will get this URL after deploying the frontend
     origin: ['http://localhost:5173', 'hhttps://book-review-platform-1-1wz2.onrender.com'], 
     optionsSuccessStatus: 200 
 };
@@ -37,7 +35,7 @@ app.get('/', (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000;
 const MONGO_URI = process.env.MONGO_URI;
 
 mongoose.connect(MONGO_URI)
