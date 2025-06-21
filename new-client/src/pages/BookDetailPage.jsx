@@ -1,11 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react'; 
 import { useParams } from 'react-router-dom';
-import { getBookById } from '../api/bookApi';
-import { getReviewsByBookId } from '../api/reviewApi';
-import Loader from '../components/Loader';
-import ErrorMessage from '../components/ErrorMessage';
-import ReviewList from '../components/ReviewList';
-import ReviewForm from '../components/ReviewForm';
+import { getBookById } from '../api/bookApi.js';
+import { getReviewsByBookId } from '../api/reviewApi.js';
+import { BookContext } from '../context/BookContext.js'; 
+import Loader from '../components/Loader.jsx';
+import ErrorMessage from '../components/ErrorMessage.jsx';
+import ReviewList from '../components/ReviewList.jsx';
+import ReviewForm from '../components/ReviewForm.jsx';
+import StarRating from '../components/StarRating.jsx';
+
 
 const BookDetailPage = () => {
   const { id } = useParams();
@@ -13,6 +16,8 @@ const BookDetailPage = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const { fetchBooks } = useContext(BookContext);
 
   const fetchBookAndReviews = useCallback(async () => {
     try {
@@ -25,8 +30,8 @@ const BookDetailPage = () => {
       setBook(bookRes.data);
       setReviews(reviewsRes.data);
     } catch (err) {
-      console.error("Failed on detail page:", err); 
-      setError('Failed to load book details and reviews');
+      setError('Failed to load book details and reviews.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -34,7 +39,14 @@ const BookDetailPage = () => {
 
   useEffect(() => {
     fetchBookAndReviews();
-  }, [fetchBookAndReviews]); 
+  }, [id, fetchBookAndReviews]);
+
+
+  const handleReviewSubmitted = async () => {
+    await fetchBookAndReviews();
+    await fetchBooks();
+  };
+
 
   if (loading) return <Loader />;
   if (error) return <ErrorMessage message={error} />;
@@ -51,14 +63,19 @@ const BookDetailPage = () => {
         <div className="book-detail-info">
           <h1>{book.title}</h1>
           <h2>by {book.author}</h2>
-          <p className="book-detail-rating"><strong>Average Rating:</strong> {book.rating || 'N/A'} / 5</p>
+          <div className="book-detail-rating">
+            <StarRating rating={book.rating} />
+            <span style={{ marginLeft: '10px', color: '#777' }}>
+              ({book.numReviews || 0} reviews)
+            </span>
+          </div>
           <p><strong>Description:</strong> {book.description}</p>
         </div>
       </div>
       <hr />
       <div className="book-detail-reviews-section">
         <ReviewList reviews={reviews} />
-        <ReviewForm bookId={id} onReviewSubmitted={fetchBookAndReviews} />
+        <ReviewForm bookId={id} onReviewSubmitted={handleReviewSubmitted} />
       </div>
     </div>
   );
